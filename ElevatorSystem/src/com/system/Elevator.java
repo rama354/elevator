@@ -5,7 +5,7 @@ public class Elevator {
 	private int currentFloor;
 	private int previousFloor;
 	private Direction currentDirection;
-	private enum Direction{ UP, DOWN, STATIONARY };
+	public enum Direction{ UP, DOWN, STATIONARY };
 	
 	public synchronized void nextFloor(int floornum)
 	{		

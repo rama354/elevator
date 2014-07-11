@@ -11,6 +11,8 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.system.Elevator.Direction;
+
 /**
  * @author asus
  *
@@ -52,7 +54,8 @@ public class ElevatorMain {
 	private Thread getNextFloorFromPool()
 	{
 		int diff=0;
-		TreeMap<Integer,Integer> differenceMap = new TreeMap<Integer,Integer>();
+		TreeMap<Integer,Integer> upDiffMap = new TreeMap<Integer,Integer>();
+		TreeMap<Integer,Integer> downDiffMap = new TreeMap<Integer,Integer>();
 		Iterator<Integer> iter = pressedFloors.iterator();
 		
 		while (iter.hasNext())
@@ -61,15 +64,25 @@ public class ElevatorMain {
 			diff = pressedFloor-elevator.getCurrentFloor();
 			if (diff < 0)
 			{
-				differenceMap.put(Math.abs(diff),pressedFloor);
+				downDiffMap.put(Math.abs(diff),pressedFloor);
 			}
-			else{
-				differenceMap.put(diff,pressedFloor);
+			if (diff > 0)
+			{
+				upDiffMap.put(diff,pressedFloor);
 			}
 				
 		}
-		pressedFloors.remove(differenceMap.firstKey());
-		return floorThreadPool.get(differenceMap.firstKey());
+		
+		if (elevator.getCurrentDirection() ==  Direction.UP)
+		{
+			pressedFloors.remove(upDiffMap.firstKey());
+			return floorThreadPool.get(upDiffMap.firstKey());
+		}
+		else{
+			pressedFloors.remove(downDiffMap.firstKey());
+			return floorThreadPool.get(downDiffMap.firstKey());
+		}
+		
 		
 	}
 }
