@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -41,11 +39,17 @@ public class ElevatorMain {
 		ElevatorOperation input = new ElevatorOperation(pressedFloors,in);
 		input.start();
 	
-		system.getFloorThreadFromPool().start();
+		while(!pressedFloors.isEmpty())
+			system.getNextFloorFromPool().start();
 
 	}
 
-	private Thread getFloorThreadFromPool()
+
+	/**
+	 * algorithm for identifying next floor for elevator
+	 * @return
+	 */
+	private Thread getNextFloorFromPool()
 	{
 		int diff=0;
 		TreeMap<Integer,Integer> differenceMap = new TreeMap<Integer,Integer>();

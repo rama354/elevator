@@ -3,6 +3,7 @@ package com.system;
 public class Elevator {
 	
 	private int currentFloor;
+	private int previousFloor;
 	private Direction currentDirection;
 	private enum Direction{ UP, DOWN, STATIONARY };
 	
