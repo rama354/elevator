@@ -21,4 +21,33 @@ public class Elevator {
 		
  	}
 
+	/**
+	 * @return the currentFloor
+	 */
+	public synchronized int getCurrentFloor() {
+		return currentFloor;
+	}
+
+	/**
+	 * @param currentFloor the currentFloor to set
+	 */
+	public synchronized void setCurrentFloor(int currentFloor) {
+		this.currentFloor = currentFloor;
+	}
+
+	/**
+	 * @return the currentDirection
+	 */
+	public synchronized Direction getCurrentDirection() {
+		return currentDirection;
+	}
+
+	/**
+	 * @param currentDirection the currentDirection to set
+	 */
+	public synchronized void setCurrentDirection(Direction currentDirection) {
+		this.currentDirection = currentDirection;
+	}
+
+	
 }

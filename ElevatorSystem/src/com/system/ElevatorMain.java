@@ -4,9 +4,12 @@
 package com.system;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -17,12 +20,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ElevatorMain {
 
 	private static List<Thread> floorThreadPool = new ArrayList<Thread>();
-	private static Queue<String> pressedFloors = new LinkedBlockingQueue<String>();
+	private static Queue<Integer> pressedFloors = new LinkedBlockingQueue<Integer>();
+	private Elevator elevator;
 	
 	public void init(int numOfFloors)
 	{	
-		Elevator elevator = new Elevator();
-		for (int i=1;i<=numOfFloors; i++){
+		elevator = new Elevator();
+		for (int i=0;i<=numOfFloors; i++){
 			floorThreadPool.add(new Thread(new Floor(i,elevator)));
 		}
 	}
@@ -31,17 +35,37 @@ public class ElevatorMain {
 	{
 		ElevatorMain system = new ElevatorMain();
 		Scanner in = new Scanner(System.in);
+		System.out.println("How many floors in the building?");
 		system.init(in.nextInt());
 		
-		FloorInputThread input = new FloorInputThread(pressedFloors,in);
+		ElevatorOperation input = new ElevatorOperation(pressedFloors,in);
 		input.start();
+	
 		system.getFloorThreadFromPool().start();
 
 	}
 
 	private Thread getFloorThreadFromPool()
 	{
+		int diff=0;
+		TreeMap<Integer,Integer> differenceMap = new TreeMap<Integer,Integer>();
+		Iterator<Integer> iter = pressedFloors.iterator();
 		
+		while (iter.hasNext())
+		{
+			int pressedFloor = iter.next();
+			diff = pressedFloor-elevator.getCurrentFloor();
+			if (diff < 0)
+			{
+				differenceMap.put(Math.abs(diff),pressedFloor);
+			}
+			else{
+				differenceMap.put(diff,pressedFloor);
+			}
+				
+		}
+		pressedFloors.remove(differenceMap.firstKey());
+		return floorThreadPool.get(differenceMap.firstKey());
 		
 	}
 }
